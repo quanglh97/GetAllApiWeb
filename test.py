@@ -20,6 +20,7 @@ options.add_argument("--window-size=1920,1080")
 options.add_experimental_option("excludeSwitches",["enable-automation"])
 options.headless = False
 driver = webdriver.Chrome(executable_path=r"C:\Users\HLC_2021\Desktop\chromedriver.exe", options=options)
+driver.maximize_window()
 
 def function(indexDriver):
     print("in thread")
@@ -28,7 +29,9 @@ def function(indexDriver):
 dev_tools = pychrome.Browser(url="http://localhost:8000")
 tab = dev_tools.list_tab()[0]
 
+
 driver.get('https://vnexpress.net/')
+
 
 action = webdriver.ActionChains(driver)
 
@@ -37,12 +40,16 @@ action.move_to_element(a).perform()
 action.key_down(Keys.LEFT_CONTROL).click(a).perform()
 
 print("before start thread")
-
+b = driver.find_element_by_xpath('//*[@id="wrap-main-nav"]/nav/ul/li[3]/ul/li[1]/a')
+if b.is_displayed():
+    print('b is visible')
 driver2 = driver
 x = threading.Thread(target=function, args=(driver2,), daemon=True)
 x.start()
 x.join()
 soup = BeautifulSoup(driver.page_source, 'html.parser')
+if b.is_displayed():
+    print('b is not visible')
 driver.switch_to.window(driver.window_handles[0])
 print("finish thread main")
 # sleep(30)

@@ -113,7 +113,7 @@ driver.get(url)
 # action.move_to_element(a)
 # action.perform()
 
-# soup = BeautifulSoup(driver.page_source,'html.parser')
+soup = BeautifulSoup(driver.page_source,'html.parser')
 # elements = soup.find_all("a")
 # print("search all elements by soup\n")
 # for element in elements:
@@ -122,8 +122,10 @@ driver.get(url)
 # CtrlClickElement(href_a_tab, driver)
 
 ids = driver.find_elements_by_xpath("//*")
-print("search all elements by selenium\n")
-print(driver.current_window_handle)
+#print("search all elements by selenium\n")
+#print(driver.current_window_handle)
+
+ids = soup 
 for ii in ids:
   
     action = webdriver.ActionChains(driver)
@@ -132,10 +134,6 @@ for ii in ids:
             action.move_to_element(ii).perform()
         except Exception as e:
             action.move_to_element(ii).perform()
-
-        js = "arguments[0].style.height='auto'; arguments[0].style.visibility='visible';"
-        driver.execute_script(js, ii)
-        #sleep(0.2)
         #check href to click
         try: 
             if ii.tag_name == "a":
@@ -146,9 +144,15 @@ for ii in ids:
                 action.key_down(Keys.LEFT_CONTROL).click(ii).perform()
                 try:
                     if len(driver.window_handles) > 1:
-                        if driver.current_window_handle == driver.window_handles[0]:
-                            driver.switch_to.window(driver.window_handles[1])
-                            driver.close()
+                        #if driver.current_window_handle == driver.window_handles[0]:
+                            #switch tab
+                        action = webdriver.ActionChains(driver)
+                        #action.key_down(Keys.LEFT_CONTROL).key_down(Keys.TAB).key_up(Keys.CONTROL).key_up(Keys.TAB).perform()
+                        action.send_keys(Keys.CONTROL, Keys.TAB).perform()
+                        #sleep(5)
+                        #clear new tab
+                        action = webdriver.ActionChains(driver)
+                        action.send_keys(Keys.LEFT_CONTROL).send_keys("w").perform()
                 except Exception as e:
                     print('first err ', e)
                 action = webdriver.ActionChains(driver)
