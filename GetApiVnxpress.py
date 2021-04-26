@@ -124,10 +124,7 @@ soup = BeautifulSoup(driver.page_source,'html.parser')
 ids = driver.find_elements_by_xpath("//*")
 #print("search all elements by selenium\n")
 #print(driver.current_window_handle)
-
-ids = soup 
 for ii in ids:
-  
     action = webdriver.ActionChains(driver)
     if ii.is_displayed():
         try:
