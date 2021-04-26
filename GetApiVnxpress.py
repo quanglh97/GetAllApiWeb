@@ -75,7 +75,7 @@ def xpath_soup(element):
     components.reverse()
     return '/%s' % '/'.join(components)
 
-def CtrlClickElement(element, driver):
+def ctrlClickElement(element, driver):
     b = driver.find_element_by_xpath(xpath_soup(element))
     action = webdriver.ActionChains(driver)
     if b.is_displayed():
@@ -92,9 +92,8 @@ tab.call_method("Network.enable", _timeout = 20)
 tab.set_listener("Network.requestWillBeSent", output_on_start)
 tab.set_listener("Network.responseReceived", output_on_finish)
 
-url = "https://vnexpress.net/"
+url = "https://vnexpress.net"
 
-#action = webdriver.ActionChains(driver)
 driver.get(url)
 
 #search = driver.find_element_by_id("keywordHeader")
@@ -125,42 +124,73 @@ ids = driver.find_elements_by_xpath("//*")
 #print("search all elements by selenium\n")
 #print(driver.current_window_handle)
 
-ids = soup 
+def behaviorAction(element):
+    try:
+        action.move_to_element(element).perform()
+    except Exception as e:
+        action.move_to_element(element).perform()
+#check href to click
+    try: 
+        if element.get_attribute('href'):
+            link = element.get_attribute('href') 
+            print(element.tag_name, link)
+            if "http://" in link or "https://" in link:
+                if url not in link:
+                    return
+            action.key_down(Keys.LEFT_CONTROL).click(element).perform()
+            sleep(5)
+            #close new tab
+            try:
+                if len(driver.window_handles) > 1:
+                    driver.switch_to.window(driver.window_handles[1])
+                    #xu ly tiếp với sub link
+                    
+                    winHandleBefore = driver.window_handles[0]
+                    driver.close()
+                    driver.switch_to.window(winHandleBefore)
+            except Exception as e:
+                print("close new tab", e)
+    except Exception as e:
+        print('check href to click ', e)
+        return
+
+
+#module hover all elements 
+
 for ii in ids:
-  
     action = webdriver.ActionChains(driver)
-    if ii.is_displayed():
-        try:
-            action.move_to_element(ii).perform()
-        except Exception as e:
-            action.move_to_element(ii).perform()
-        #check href to click
-        try: 
-            if ii.tag_name == "a":
-                link = ii.get_attribute('href') 
-                if "http://" in link or "https://" in link:
-                    if url not in link:
-                        continue
-                action.key_down(Keys.LEFT_CONTROL).click(ii).perform()
-                try:
-                    if len(driver.window_handles) > 1:
-                        #if driver.current_window_handle == driver.window_handles[0]:
-                            #switch tab
-                        action = webdriver.ActionChains(driver)
-                        #action.key_down(Keys.LEFT_CONTROL).key_down(Keys.TAB).key_up(Keys.CONTROL).key_up(Keys.TAB).perform()
-                        action.send_keys(Keys.CONTROL, Keys.TAB).perform()
-                        #sleep(5)
-                        #clear new tab
-                        action = webdriver.ActionChains(driver)
-                        action.send_keys(Keys.LEFT_CONTROL).send_keys("w").perform()
-                except Exception as e:
-                    print('first err ', e)
-                action = webdriver.ActionChains(driver)
-                action.move_to_element(ii).perform()
-        except Exception as e:
-            print('second err ', e)
-            continue
-    print(ii) 
+    try:
+        print(ii.tag_name) 
+        if ii.is_displayed():
+            behaviorAction(ii)
+        else:
+            stackElement = []
+            stackElement.append(ii)
+            iiTemp = ii
+            ii_parent = iiTemp.find_element_by_xpath('..')
+            while True:
+                if len(stackElement) == 0:
+                    break
+                print("______", ii_parent.tag_name)
+                if ii_parent.is_displayed():
+                    action = webdriver.ActionChains(driver)
+                    action.move_to_element(ii_parent).perform()
+                    ii_parent = stackElement.pop()
+                    if not ii_parent.is_displayed():
+                        break
+                else:
+                    stackElement.append(ii_parent)
+                    iiTemp = ii_parent
+                    ii_parent = iiTemp.find_element_by_xpath('..')
+
+                if ii.is_displayed() or ii_parent.tag_name == 'body' or ii_parent.tag_name == 'head' or ii_parent.tag_name == 'html':
+                    break
+
+            if ii.is_displayed():
+                        behaviorAction(ii)   
+
+    except Exception as e:
+        print('except: ', e)
 
 # threads = list()
 # for a in href_a_tab:
