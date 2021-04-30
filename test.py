@@ -31,27 +31,29 @@ tab = dev_tools.list_tab()[0]
 
 
 driver.get('https://vnexpress.net/')
+sleep(3)
+driver.get('https://www.w3schools.com/')
 
 
-action = webdriver.ActionChains(driver)
+# action = webdriver.ActionChains(driver)
 
-a = driver.find_element_by_xpath('//*[@id="wrap-main-nav"]/nav/ul/li[3]/a')
-action.move_to_element(a).perform()
-action.key_down(Keys.LEFT_CONTROL).click(a).perform()
+# a = driver.find_element_by_xpath('//*[@id="wrap-main-nav"]/nav/ul/li[3]/a')
+# action.move_to_element(a).perform()
+# action.key_down(Keys.LEFT_CONTROL).click(a).perform()
 
-print("before start thread")
-b = driver.find_element_by_xpath('//*[@id="wrap-main-nav"]/nav/ul/li[3]/ul/li[1]/a')
-if b.is_displayed():
-    print('b is visible')
-driver2 = driver
-x = threading.Thread(target=function, args=(driver2,), daemon=True)
-x.start()
-x.join()
-soup = BeautifulSoup(driver.page_source, 'html.parser')
-if b.is_displayed():
-    print('b is not visible')
-driver.switch_to.window(driver.window_handles[0])
-print("finish thread main")
+# print("before start thread")
+# b = driver.find_element_by_xpath('//*[@id="wrap-main-nav"]/nav/ul/li[3]/ul/li[1]/a')
+# if b.is_displayed():
+#     print('b is visible')
+# driver2 = driver
+# x = threading.Thread(target=function, args=(driver2,), daemon=True)
+# x.start()
+# x.join()
+# soup = BeautifulSoup(driver.page_source, 'html.parser')
+# if b.is_displayed():
+#     print('b is not visible')
+# driver.switch_to.window(driver.window_handles[0])
+# print("finish thread main")
 # sleep(30)
 # print(soup)
 # t = Timer(50, None)  
