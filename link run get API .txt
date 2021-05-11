@@ -1,0 +1,23 @@
+http://192.168.100.250:5000/
+
+#[get] domain exist in database
+http://192.168.100.250:5000/api/resources/domain/
+
+#[get] all domain exist in database
+http://192.168.100.250:5000/api/resources/domain/all
+
+#check domain exist in database
+http://192.168.100.250:5000/api/resources/domain/
+	parameter:    domain: 
+
+#[get] item API exist in database
+http://192.168.100.250:5000/api/resources/domain/API
+	parameter:    domain: or id (domain)
+	
+#[get] run get API of web
+http://192.168.100.250:5000/api/resources/domain/API/run
+	parameter:  depth, domain or id(domain)
+
+#[post] domain to database
+http://192.168.100.250:5000/api/post/domain
+	parameter:  domain
